@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+    - alias: "kodetools@mooncloak.com"
+      website: "https://kodetools.mooncloak.codes"
+contact:
+    - alias: "kodetools@mooncloak.com"
+      website: "https://kodetools.mooncloak.codes"
+title: "kmd"
+type: "software"
+abstract: "Kotlin multi-platform shell command runner."
+license: "Apache-2.0"
+keywords:
+    - "kotlin"
+    - "multiplatform"
+    - "command"
+    - "shell"
+    - "terminal"
+    - "cmd"
+    - "command runner"
+    - "kotlin multiplatform"
+repository-code: "https://github.com/mooncloak/kmd"
+url: "https://github.com/mooncloak/kmd"
