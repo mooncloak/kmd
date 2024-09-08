@@ -1,0 +1,41 @@
+public final class com/mooncloak/kodetools/kmd/ExitCode {
+	public static final field Companion Lcom/mooncloak/kodetools/kmd/ExitCode$Companion;
+	public static final synthetic fun box-impl (I)Lcom/mooncloak/kodetools/kmd/ExitCode;
+	public static fun constructor-impl (I)I
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (ILjava/lang/Object;)Z
+	public static final fun equals-impl0 (II)Z
+	public final fun getValue ()I
+	public fun hashCode ()I
+	public static fun hashCode-impl (I)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (I)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()I
+}
+
+public final class com/mooncloak/kodetools/kmd/ExitCode$Companion {
+	public final fun getNORMAL-ph2Ugu0 ()I
+}
+
+public final class com/mooncloak/kodetools/kmd/KmdKt {
+	public static final fun kmd (Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Lcom/mooncloak/kodetools/kmd/Process;
+	public static synthetic fun kmd$default (Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/mooncloak/kodetools/kmd/Process;
+}
+
+public abstract interface class com/mooncloak/kodetools/kmd/Process {
+	public static final field Companion Lcom/mooncloak/kodetools/kmd/Process$Companion;
+	public abstract fun await-GD2Tztc (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun getError ()Lokio/Source;
+	public abstract fun getInput ()Lokio/Sink;
+	public abstract fun getOutput ()Lokio/Source;
+	public abstract fun isAlive ()Z
+	public abstract fun terminate ()V
+}
+
+public final class com/mooncloak/kodetools/kmd/Process$Companion {
+}
+
+public final class com/mooncloak/kodetools/kmd/ProcessKt {
+	public static final fun isTerminated (Lcom/mooncloak/kodetools/kmd/Process;)Z
+}
+

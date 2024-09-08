@@ -1,0 +1,20 @@
+$dokka.format:gfm-v1
+$dokka.linkExtension:md
+$dokka.location:com.mooncloak.kodetools.kmd////PointingToDeclaration/kmd-core/kmd-core/com.mooncloak.kodetools.kmd/index.md
+$dokka.location:com.mooncloak.kodetools.kmd//isTerminated/com.mooncloak.kodetools.kmd.Process#/PointingToDeclaration/kmd-core/kmd-core/com.mooncloak.kodetools.kmd/is-terminated.md
+$dokka.location:com.mooncloak.kodetools.kmd//kmd/#kotlin.String#kotlin.Array[kotlin.String]#kotlin.String?/PointingToDeclaration/kmd-core/kmd-core/com.mooncloak.kodetools.kmd/kmd.md
+$dokka.location:com.mooncloak.kodetools.kmd/ExitCode.Companion///PointingToDeclaration/kmd-core/kmd-core/com.mooncloak.kodetools.kmd/-exit-code/-companion/index.md
+$dokka.location:com.mooncloak.kodetools.kmd/ExitCode.Companion/NORMAL/#/PointingToDeclaration/kmd-core/kmd-core/com.mooncloak.kodetools.kmd/-exit-code/-companion/-n-o-r-m-a-l.md
+$dokka.location:com.mooncloak.kodetools.kmd/ExitCode///PointingToDeclaration/kmd-core/kmd-core/com.mooncloak.kodetools.kmd/-exit-code/index.md
+$dokka.location:com.mooncloak.kodetools.kmd/ExitCode/ExitCode/#kotlin.Int/PointingToDeclaration/kmd-core/kmd-core/com.mooncloak.kodetools.kmd/-exit-code/-exit-code.md
+$dokka.location:com.mooncloak.kodetools.kmd/ExitCode/value/#/PointingToDeclaration/kmd-core/kmd-core/com.mooncloak.kodetools.kmd/-exit-code/value.md
+$dokka.location:com.mooncloak.kodetools.kmd/Process.Companion///PointingToDeclaration/kmd-core/kmd-core/com.mooncloak.kodetools.kmd/-process/-companion/index.md
+$dokka.location:com.mooncloak.kodetools.kmd/Process///PointingToDeclaration/kmd-core/kmd-core/com.mooncloak.kodetools.kmd/-process/index.md
+$dokka.location:com.mooncloak.kodetools.kmd/Process/await/#/PointingToDeclaration/kmd-core/kmd-core/com.mooncloak.kodetools.kmd/-process/await.md
+$dokka.location:com.mooncloak.kodetools.kmd/Process/error/#/PointingToDeclaration/kmd-core/kmd-core/com.mooncloak.kodetools.kmd/-process/error.md
+$dokka.location:com.mooncloak.kodetools.kmd/Process/input/#/PointingToDeclaration/kmd-core/kmd-core/com.mooncloak.kodetools.kmd/-process/input.md
+$dokka.location:com.mooncloak.kodetools.kmd/Process/isAlive/#/PointingToDeclaration/kmd-core/kmd-core/com.mooncloak.kodetools.kmd/-process/is-alive.md
+$dokka.location:com.mooncloak.kodetools.kmd/Process/output/#/PointingToDeclaration/kmd-core/kmd-core/com.mooncloak.kodetools.kmd/-process/output.md
+$dokka.location:com.mooncloak.kodetools.kmd/Process/terminate/#/PointingToDeclaration/kmd-core/kmd-core/com.mooncloak.kodetools.kmd/-process/terminate.md
+module:kmd-core
+com.mooncloak.kodetools.kmd

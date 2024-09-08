@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -18,6 +17,7 @@ kotlin {
                 enabled = false
             }
         }
+
         nodejs {
             testTask {
                 enabled = false
@@ -27,13 +27,14 @@ kotlin {
         binaries.executable()
     }
 
-    @OptIn(ExperimentalWasmDsl::class)
+    @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
     wasmJs {
         browser {
             testTask {
                 enabled = false
             }
         }
+
         nodejs {
             testTask {
                 enabled = false
@@ -46,18 +47,23 @@ kotlin {
     macosX64()
     macosArm64()
 
+    linuxArm64()
+    linuxX64()
+
+    mingwX64()
+
     iosArm64()
     iosX64()
     iosSimulatorArm64()
 
-    // TODO: Re-enable: tvosArm64()
-    // TODO: Re-enable: tvosX64()
-    // TODO: Re-enable: tvosSimulatorArm64()
+    tvosArm64()
+    tvosX64()
+    tvosSimulatorArm64()
 
-    // TODO: Re-enable: watchosArm32()
-    // TODO: Re-enable: watchosArm64()
-    // TODO: Re-enable: watchosX64()
-    // TODO: Re-enable: watchosSimulatorArm64()
+    watchosArm32()
+    watchosArm64()
+    watchosX64()
+    watchosSimulatorArm64()
 
     androidTarget {
         publishAllLibraryVariants()
