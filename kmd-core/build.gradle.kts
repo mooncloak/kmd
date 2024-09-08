@@ -1,52 +1,30 @@
-import com.mooncloak.kodetools.kmd.buildSrc.LibraryConstants
-import com.mooncloak.kodetools.kmd.buildSrc.isBuildingOnLinux
-import com.mooncloak.kodetools.kmd.buildSrc.isBuildingOnOSX
-import com.mooncloak.kodetools.kmd.buildSrc.isBuildingOnWindows
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("multiplatform")
+    kotlin("plugin.serialization")
     id("com.android.library")
-    id("maven-publish")
     id("org.jetbrains.dokka")
-    id("com.mikepenz.aboutlibraries.plugin")
+    id("kmd.multiplatform")
+    id("kmd.publish")
+    id("org.jetbrains.compose")
+    id("org.jetbrains.kotlin.plugin.compose")
 }
 
-group = LibraryConstants.group
-version = LibraryConstants.versionName
-
 kotlin {
-    // Enable the default target hierarchy:
-    targetHierarchy.default()
-
-    jvm()
-
-    js(IR) {
-        nodejs()
-    }
-
-    androidTarget()
-
-    if (isBuildingOnOSX()) {
-        ios()
-        iosSimulatorArm64()
-        tvos()
-        watchos()
-        macosX64()
-        macosArm64()
-    }
-
-    if (isBuildingOnLinux()) {
-        linuxX64()
-    }
-
-    if (isBuildingOnWindows()) {
-        mingwX64()
-    }
-
     sourceSets {
+        all {
+            // Disable warnings and errors related to these expected @OptIn annotations.
+            // See: https://kotlinlang.org/docs/opt-in-requirements.html#module-wide-opt-in
+            languageSettings.optIn("kotlin.RequiresOptIn")
+            languageSettings.optIn("-Xexpect-actual-classes")
+        }
+
         val commonMain by getting {
             dependencies {
+                // Coroutines
+                // https://github.com/Kotlin/kotlinx.coroutines
+                implementation(KotlinX.coroutines.core)
+
                 api("com.squareup.okio:okio:_")
             }
         }
@@ -56,13 +34,12 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
-
-        val nativeMain by sourceSets.getting
     }
 }
 
 android {
     compileSdk = LibraryConstants.Android.compileSdkVersion
+    namespace = "com.mooncloak.kodetools.kmd.core"
 
     defaultConfig {
         minSdk = LibraryConstants.Android.minSdkVersion
@@ -97,22 +74,4 @@ android {
 
     sourceSets["test"].java.srcDirs("src/androidTest/kotlin")
     sourceSets["test"].res.srcDirs("src/androidTest/res")
-}
-
-tasks.withType<Jar> { duplicatesStrategy = DuplicatesStrategy.INHERIT }
-
-aboutLibraries {
-    // - If the automatic registered android tasks are disabled, a similar thing can be achieved manually
-    // - `./gradlew app:exportLibraryDefinitions -PaboutLibraries.exportPath=src/main/res/raw`
-    // - the resulting file can for example be added as part of the SCM
-    registerAndroidTasks = false
-
-    // Define the output file name. Modifying this will disable the automatic meta data discovery for supported platforms.
-    outputFileName = "dependencies.json"
-
-    // Enable pretty printing for the generated JSON file
-    prettyPrint = true
-
-    // Allows to only collect dependencies of specific variants during the `collectDependencies` step.
-    filterVariants += "release"
 }
