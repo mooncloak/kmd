@@ -32,6 +32,20 @@ repositories {
 implementation("com.mooncloak.kodetools.kmd:kmd-core:VERSION")
 ```
 
+## Usage
+
+```kotlin
+// Suspend until the command finishes
+val exitCode = kmd("git checkout .").await()
+
+// Retrieve the process and listen to its output
+val process = kmd("git status")
+val buffer = process.output.buffer()
+while (!buffer.exhausted()) {
+    println(buffer.readUtf8Line())
+}
+```
+
 ## Documentation 📃
 
 More detailed documentation is available in the [docs](docs/) folder. The entry point to the
