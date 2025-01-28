@@ -3,8 +3,6 @@ package com.mooncloak.kodetools.kmd
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 /**
  * Constructs a new CommandBuilder for executing a given command with specified arguments and coroutine scope.
@@ -112,20 +110,4 @@ public suspend fun execKmd(
         onStandardOut = onStandardOut,
         onStandardError = onStandardError
     ).await()
-}
-
-private suspend fun test() {
-    val checkout = kmdBuilder("git checkout .")
-        .onStandardOut {}
-        .onStandardError {}
-        .build()
-
-    val status = kmdBuilder("git status")
-        .onStandardOut {}
-        .onStandardError {}
-        .build()
-
-    checkout.then(status)
-        .build()
-        .await()
 }
