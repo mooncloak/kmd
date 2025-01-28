@@ -65,7 +65,7 @@ afterEvaluate {
 fun MavenPublication.mavenCentralPom() {
     pom {
         name.set("kmd")
-        description.set("Kotlin multi-platform shell command runner.")
+        description.set("Kotlin multiplatform shell command runner.")
         url.set("https://github.com/mooncloak/kmd")
 
         organization {

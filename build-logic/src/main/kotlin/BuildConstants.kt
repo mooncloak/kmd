@@ -1,7 +1,8 @@
 @file:Suppress("MemberVisibilityCanBePrivate")
 
-object LibraryConstants {
+object BuildConstants {
 
+    @Suppress("ConstPropertyName")
     object Android {
 
         const val compileSdkVersion = 34
