@@ -30,6 +30,14 @@ kotlin {
                 implementation(KotlinX.coroutines.test)
             }
         }
+
+        val nativeMain by getting {
+            dependencies {
+                // Kotlin multiplatform I/O
+                // https://github.com/Kotlin/kotlinx-io
+                implementation("org.jetbrains.kotlinx:kotlinx-io-core:_")
+            }
+        }
     }
 }
 

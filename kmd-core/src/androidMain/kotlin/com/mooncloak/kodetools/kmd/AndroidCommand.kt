@@ -26,30 +26,33 @@ internal actual suspend fun Command.execute(): CommandResult =
 
         val process = builder.start()
 
-        launch {
-            process.inputStream.subscribeOutput(
-                output = { currentOutput },
-                onOutputChanged = { updated ->
-                    currentOutput = updated
+        // TODO: Handle output on Android before API 24?
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            launch {
+                process.inputStream.subscribeOutput(
+                    output = { currentOutput },
+                    onOutputChanged = { updated ->
+                        currentOutput = updated
 
-                    standardOutHandlers.forEach { handler ->
-                        handler.handle(ProcessOutputScope, updated)
+                        standardOutHandlers.forEach { handler ->
+                            handler.handle(ProcessOutputScope, updated)
+                        }
                     }
-                }
-            )
-        }
+                )
+            }
 
-        launch {
-            process.errorStream.subscribeOutput(
-                output = { currentError },
-                onOutputChanged = { updated ->
-                    currentError = updated
+            launch {
+                process.errorStream.subscribeOutput(
+                    output = { currentError },
+                    onOutputChanged = { updated ->
+                        currentError = updated
 
-                    standardErrorHandlers.forEach { handler ->
-                        handler.handle(ProcessOutputScope, updated)
+                        standardErrorHandlers.forEach { handler ->
+                            handler.handle(ProcessOutputScope, updated)
+                        }
                     }
-                }
-            )
+                )
+            }
         }
 
         val exitCode = ExitCode(value = process.waitFor())

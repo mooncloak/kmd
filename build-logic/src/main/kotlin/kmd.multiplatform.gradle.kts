@@ -12,12 +12,6 @@ kotlin {
     applyDefaultHierarchyTemplate()
 
     js {
-        browser {
-            testTask {
-                enabled = false
-            }
-        }
-
         nodejs {
             testTask {
                 enabled = false
@@ -29,12 +23,6 @@ kotlin {
 
     @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
     wasmJs {
-        browser {
-            testTask {
-                enabled = false
-            }
-        }
-
         nodejs {
             testTask {
                 enabled = false
@@ -55,15 +43,6 @@ kotlin {
     iosArm64()
     iosX64()
     iosSimulatorArm64()
-
-    tvosArm64()
-    tvosX64()
-    tvosSimulatorArm64()
-
-    watchosArm32()
-    watchosArm64()
-    watchosX64()
-    watchosSimulatorArm64()
 
     androidTarget {
         publishAllLibraryVariants()
