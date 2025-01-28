@@ -1,0 +1,77 @@
+package com.mooncloak.kodetools.kmd
+
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
+
+class ProcessOutputTest {
+
+    @Test
+    fun `verify ProcessOutput properties`() {
+        val totalLines = listOf("Line1", "Line2", "Line3")
+        val diffLines = listOf("Line2", "Line3")
+
+        val processOutput = ProcessOutput(totalLines, diffLines)
+
+        assertEquals(totalLines, processOutput.totalLines)
+        assertEquals(diffLines, processOutput.diffLines)
+    }
+
+    @Test
+    fun `verify ProcessOutput totalLines component function`() {
+        val totalLines = listOf("Line1", "Line2", "Line3")
+        val diffLines = listOf("Line2", "Line3")
+
+        val processOutput = ProcessOutput(totalLines, diffLines)
+        val (componentTotalLines, _) = processOutput
+
+        assertEquals(totalLines, componentTotalLines)
+    }
+
+    @Test
+    fun `verify ProcessOutput diffLines component function`() {
+        val totalLines = listOf("Line1", "Line2", "Line3")
+        val diffLines = listOf("Line2", "Line3")
+
+        val processOutput = ProcessOutput(totalLines, diffLines)
+        val (_, componentDiffLines) = processOutput
+
+        assertEquals(diffLines, componentDiffLines)
+    }
+
+    @Test
+    fun `verify ProcessOutput equality and hashCode`() {
+        val totalLines = listOf("Line1", "Line2", "Line3")
+        val diffLines = listOf("Line2", "Line3")
+
+        val sameOne = ProcessOutput(totalLines, diffLines)
+        val sameTwo = ProcessOutput(totalLines, diffLines)
+        val diffOne = ProcessOutput(totalLines + "Line4", diffLines)
+
+        assertEquals(sameOne, sameTwo)
+        assertEquals(sameOne.hashCode(), sameTwo.hashCode())
+
+        assertNotEquals(sameOne, diffOne)
+        assertNotEquals(sameOne.hashCode(), diffOne.hashCode())
+
+        assertNotEquals(sameTwo, diffOne)
+        assertNotEquals(sameTwo.hashCode(), diffOne.hashCode())
+    }
+
+    @Test
+    fun `verify ProcessOutput copy function`() {
+        val totalLines = listOf("Line1", "Line2", "Line3")
+        val diffLines = listOf("Line2", "Line3")
+
+        val original = ProcessOutput(totalLines, diffLines)
+        val copiedWithSameValues = original.copy()
+        val copiedWithChangedDiffLines = original.copy(diffLines = listOf("NewLine1", "NewLine2"))
+
+        assertEquals(original, copiedWithSameValues)
+        assertEquals(original.hashCode(), copiedWithSameValues.hashCode())
+
+        assertNotEquals(original, copiedWithChangedDiffLines)
+        assertNotEquals(original.diffLines, copiedWithChangedDiffLines.diffLines)
+        assertEquals(totalLines, copiedWithChangedDiffLines.totalLines)
+    }
+}

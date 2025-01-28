@@ -13,11 +13,11 @@ import kotlinx.coroutines.flow.flow
  * to manage and process the outcomes of executing a collection of commands. Each command's
  * execution result is recorded as an individual `CommandResult` within the `commands` list.
  *
- * @property commands A list of `CommandResult` objects representing the results of
+ * @property results A list of `CommandResult` objects representing the results of
  * executing the commands in the group.
  */
 public data class CommandGroupResult public constructor(
-    public val commands: List<CommandResult> = emptyList()
+    public val results: List<CommandResult> = emptyList()
 )
 
 /**
@@ -95,7 +95,7 @@ public class CommandGroup internal constructor(
         }
 
         return CommandGroupResult(
-            commands = executedCommands
+            results = executedCommands
         )
     }
 }
