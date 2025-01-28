@@ -5,7 +5,12 @@ package com.mooncloak.kodetools.kmd
  *
  * The `CommandLineValues` interface defines a single abstract suspend function `get`,
  * which is used to fetch command-line values. Implementations of this interface enable
- * asynchronous fetching of arguments or
+ * asynchronous fetching of arguments or command values.
+ *
+ * This [CommandLineValues] component allows for building type-safe command line values. For example, using Kotlin's
+ * infix functions, and this component, you can define your own type-safe commands.
+ *
+ * @see [sudo] for a custom [CommandLineValues] implementation.
  */
 @ExperimentalKmdApi
 public fun interface CommandLineValues {

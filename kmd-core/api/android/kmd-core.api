@@ -180,3 +180,11 @@ public abstract interface class com/mooncloak/kodetools/kmd/ProcessOutputScope {
 public final class com/mooncloak/kodetools/kmd/ProcessOutputScope$Companion : com/mooncloak/kodetools/kmd/ProcessOutputScope {
 }
 
+public final class com/mooncloak/kodetools/kmd/sudo : com/mooncloak/kodetools/kmd/CommandLineValues {
+	public static final field INSTANCE Lcom/mooncloak/kodetools/kmd/sudo;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun get (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
