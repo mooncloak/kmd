@@ -1,8 +1,12 @@
 # kmd
 
-Kotlin multi-platform shell command runner.
+Kotlin multiplatform shell command runner.
 
 <img alt="GitHub tag (latest by date)" src="https://img.shields.io/github/v/tag/mooncloak/kmd">
+
+```kotlin
+execKmd("git checkout .")
+```
 
 ## Status ⚠️
 
@@ -34,16 +38,75 @@ implementation("com.mooncloak.kodetools.kmd:kmd-core:VERSION")
 
 ## Usage
 
-```kotlin
-// Suspend until the command finishes
-val exitCode = kmd("git checkout .").await()
+### Executing a command
 
-// Retrieve the process and listen to its output
-val process = kmd("git status")
-val buffer = process.output.buffer()
-while (!buffer.exhausted()) {
-    println(buffer.readUtf8Line())
+```kotlin
+val result = execKmd("git checkout .")
+
+if (result.exitCode.isSuccessful()) {
+    // Do something
 }
+```
+
+### Listening to the process outputs
+
+```kotlin
+execKmd(
+    command = "run some command",
+    onStandardOut = { output ->
+        println(output.diffLines.joinToString(separator = "\n"))
+    },
+    onStandardError = { error ->
+        println("ERROR: ${error.diffLines.joinToString(separator = "\n")}")
+    })
+```
+
+### Handle commands asynchronously
+
+```kotlin
+// Deferring the processing of the result
+val deferred = kmd(
+    command = "git checkout .",
+    coroutineScope = myScope
+).async()
+val result = deferred.await()
+
+// Suspend until the command is finished processing
+val result = kmd("git checkout .")
+    .await()
+
+// Using a Flow to process the command result
+kmd("git checkout .")
+    .flow()
+    .onEach { result -> println(result.exitCode.value) }
+    .launchIn(coroutineScope)
+```
+
+### Building commands in fluent manner
+
+```kotlin
+kmdBuilder("git checkout .")
+    .onStandardOut {}
+    .onStandardError {}
+    .build()
+```
+
+### Combining multiple commands to be processed synchronously
+
+```kotlin
+val checkout = kmdBuilder("git checkout .")
+    .onStandardOut {}
+    .onStandardError {}
+    .build()
+
+val status = kmdBuilder("git status")
+    .onStandardOut {}
+    .onStandardError {}
+    .build()
+
+checkout.then(status)
+    .build()
+    .await()
 ```
 
 ## Documentation 📃
@@ -69,7 +132,7 @@ and tests. Thank you!
 ## License ⚖️
 
 ```
-Copyright 2024 mooncloak
+Copyright 2025 mooncloak
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

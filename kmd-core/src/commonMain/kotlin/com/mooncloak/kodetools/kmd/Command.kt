@@ -84,6 +84,40 @@ public class Command internal constructor(
 
     override fun toString(): String =
         "Command(command=$command, arguments=$arguments, standardOutHandlers=$standardOutHandlers, standardErrorHandlers=$standardErrorHandlers, coroutineScope=$coroutineScope)"
+
+    public fun then(builder: CommandBuilder): CommandGroupBuilder =
+        CommandGroupBuilder(
+            commands = listOf(
+                this,
+                builder.build()
+            ),
+            coroutineScope = coroutineScope
+        )
+
+    public fun then(other: Command): CommandGroupBuilder =
+        CommandGroupBuilder(
+            commands = listOf(
+                this,
+                other
+            ),
+            coroutineScope = coroutineScope
+        )
+
+    public fun then(group: CommandGroup): CommandGroupBuilder =
+        CommandGroupBuilder(
+            commands = listOf(
+                this
+            ) + group.commands,
+            coroutineScope = coroutineScope
+        )
+
+    public fun then(groupBuilder: CommandGroupBuilder): CommandGroupBuilder =
+        CommandGroupBuilder(
+            commands = listOf(
+                this
+            ) + groupBuilder.build().commands,
+            coroutineScope = coroutineScope
+        )
 }
 
 /**
@@ -115,33 +149,10 @@ public class CommandBuilder internal constructor(
     private val command: Any,
     private val arguments: List<Any>,
     private val coroutineScope: CoroutineScope
-) : OrderedConcatenation<Command, CommandGroupBuilder> {
+) {
 
     private val mutableStandardOutHandlers = mutableListOf<ProcessOutputHandler>()
     private val mutableStandardErrorHandlers = mutableListOf<ProcessOutputHandler>()
-
-    public fun onStandardOut(
-        handler: ProcessOutputHandler
-    ): CommandBuilder {
-        mutableStandardOutHandlers.add(handler)
-        return this
-    }
-
-    public fun onStandardError(
-        handler: ProcessOutputHandler
-    ): CommandBuilder {
-        mutableStandardErrorHandlers.add(handler)
-        return this
-    }
-
-    override fun then(other: Command): CommandGroupBuilder =
-        CommandGroupBuilder(
-            commands = listOf(
-                this.build(),
-                other
-            ),
-            coroutineScope = coroutineScope
-        )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -166,6 +177,54 @@ public class CommandBuilder internal constructor(
 
     override fun toString(): String =
         "CommandBuilder(command=$command, arguments=$arguments, coroutineScope=$coroutineScope, mutableStandardOutHandlers=$mutableStandardOutHandlers, mutableStandardErrorHandlers=$mutableStandardErrorHandlers)"
+
+    public fun onStandardOut(
+        handler: ProcessOutputHandler
+    ): CommandBuilder {
+        mutableStandardOutHandlers.add(handler)
+        return this
+    }
+
+    public fun onStandardError(
+        handler: ProcessOutputHandler
+    ): CommandBuilder {
+        mutableStandardErrorHandlers.add(handler)
+        return this
+    }
+
+    public fun then(builder: CommandBuilder): CommandGroupBuilder =
+        CommandGroupBuilder(
+            commands = listOf(
+                this.build(),
+                builder.build()
+            ),
+            coroutineScope = coroutineScope
+        )
+
+    public fun then(other: Command): CommandGroupBuilder =
+        CommandGroupBuilder(
+            commands = listOf(
+                this.build(),
+                other
+            ),
+            coroutineScope = coroutineScope
+        )
+
+    public fun then(group: CommandGroup): CommandGroupBuilder =
+        CommandGroupBuilder(
+            commands = listOf(
+                this.build()
+            ) + group.commands,
+            coroutineScope = coroutineScope
+        )
+
+    public fun then(groupBuilder: CommandGroupBuilder): CommandGroupBuilder =
+        CommandGroupBuilder(
+            commands = listOf(
+                this.build()
+            ) + groupBuilder.build().commands,
+            coroutineScope = coroutineScope
+        )
 
     public fun build(): Command = Command(
         command = command,

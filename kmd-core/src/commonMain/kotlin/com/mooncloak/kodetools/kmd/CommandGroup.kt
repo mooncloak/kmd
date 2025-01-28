@@ -65,6 +65,30 @@ public class CommandGroup internal constructor(
     override fun toString(): String =
         "CommandGroup(commands=$commands, coroutineScope=$coroutineScope)"
 
+    public fun then(builder: CommandBuilder): CommandGroupBuilder =
+        CommandGroupBuilder(
+            commands = this.commands + listOf(builder.build()),
+            coroutineScope = coroutineScope
+        )
+
+    public fun then(other: Command): CommandGroupBuilder =
+        CommandGroupBuilder(
+            commands = this.commands + listOf(other),
+            coroutineScope = coroutineScope
+        )
+
+    public fun then(group: CommandGroup): CommandGroupBuilder =
+        CommandGroupBuilder(
+            commands = this.commands + group.commands,
+            coroutineScope = coroutineScope
+        )
+
+    public fun then(groupBuilder: CommandGroupBuilder): CommandGroupBuilder =
+        CommandGroupBuilder(
+            commands = this.commands + groupBuilder.build().commands,
+            coroutineScope = coroutineScope
+        )
+
     private suspend fun executeAll(): CommandGroupResult {
         val executedCommands = commands.map { command ->
             command.await()
@@ -96,15 +120,10 @@ public class CommandGroup internal constructor(
 public class CommandGroupBuilder internal constructor(
     commands: List<Command>,
     private val coroutineScope: CoroutineScope
-) : OrderedConcatenation<Command, CommandGroupBuilder> {
+) {
 
     private val commands = mutableListOf<Command>().apply {
         addAll(commands)
-    }
-
-    override fun then(other: Command): CommandGroupBuilder {
-        commands.add(other)
-        return this
     }
 
     override fun equals(other: Any?): Boolean {
@@ -123,6 +142,26 @@ public class CommandGroupBuilder internal constructor(
     }
 
     override fun toString(): String = "CommandGroupBuilder(coroutineScope=$coroutineScope, commands=$commands)"
+
+    public fun then(other: Command): CommandGroupBuilder {
+        commands.add(other)
+        return this
+    }
+
+    public fun then(builder: CommandBuilder): CommandGroupBuilder {
+        commands.add(builder.build())
+        return this
+    }
+
+    public fun then(group: CommandGroup): CommandGroupBuilder {
+        commands.addAll(group.commands)
+        return this
+    }
+
+    public fun then(groupBuilder: CommandGroupBuilder): CommandGroupBuilder {
+        commands.addAll(groupBuilder.build().commands)
+        return this
+    }
 
     public fun build(): CommandGroup = CommandGroup(
         commands = commands,
