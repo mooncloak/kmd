@@ -10,32 +10,44 @@ public final class com/mooncloak/kodetools/kmd/AsyncExecutor$Companion {
 public final class com/mooncloak/kodetools/kmd/Command : com/mooncloak/kodetools/kmd/AsyncExecutor, com/mooncloak/kodetools/kmd/FlowExecutor {
 	public fun async ()Lkotlinx/coroutines/Deferred;
 	public fun await (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun equals (Ljava/lang/Object;)Z
 	public fun flow ()Lkotlinx/coroutines/flow/Flow;
 	public final fun getArguments ()Ljava/util/List;
 	public final fun getCommand ()Ljava/lang/Object;
 	public final fun getStandardErrorHandlers ()Ljava/util/List;
 	public final fun getStandardOutHandlers ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/mooncloak/kodetools/kmd/CommandBuilder : com/mooncloak/kodetools/kmd/OrderedConcatenation {
 	public final fun build ()Lcom/mooncloak/kodetools/kmd/Command;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
 	public final fun onStandardError (Lcom/mooncloak/kodetools/kmd/ProcessOutputHandler;)Lcom/mooncloak/kodetools/kmd/CommandBuilder;
 	public final fun onStandardOut (Lcom/mooncloak/kodetools/kmd/ProcessOutputHandler;)Lcom/mooncloak/kodetools/kmd/CommandBuilder;
 	public fun then (Lcom/mooncloak/kodetools/kmd/Command;)Lcom/mooncloak/kodetools/kmd/CommandGroupBuilder;
 	public synthetic fun then (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/mooncloak/kodetools/kmd/CommandGroup : com/mooncloak/kodetools/kmd/AsyncExecutor, com/mooncloak/kodetools/kmd/FlowExecutor {
 	public fun async ()Lkotlinx/coroutines/Deferred;
 	public fun await (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun equals (Ljava/lang/Object;)Z
 	public fun flow ()Lkotlinx/coroutines/flow/Flow;
 	public final fun getCommands ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/mooncloak/kodetools/kmd/CommandGroupBuilder : com/mooncloak/kodetools/kmd/OrderedConcatenation {
 	public final fun build ()Lcom/mooncloak/kodetools/kmd/CommandGroup;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
 	public fun then (Lcom/mooncloak/kodetools/kmd/Command;)Lcom/mooncloak/kodetools/kmd/CommandGroupBuilder;
 	public synthetic fun then (Ljava/lang/Object;)Ljava/lang/Object;
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/mooncloak/kodetools/kmd/CommandGroupResult {

@@ -47,6 +47,24 @@ public class CommandGroup internal constructor(
         }
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is CommandGroup) return false
+
+        if (commands != other.commands) return false
+
+        return coroutineScope == other.coroutineScope
+    }
+
+    override fun hashCode(): Int {
+        var result = commands.hashCode()
+        result = 31 * result + coroutineScope.hashCode()
+        return result
+    }
+
+    override fun toString(): String =
+        "CommandGroup(commands=$commands, coroutineScope=$coroutineScope)"
+
     private suspend fun executeAll(): CommandGroupResult {
         val executedCommands = commands.map { command ->
             command.await()
@@ -88,6 +106,23 @@ public class CommandGroupBuilder internal constructor(
         commands.add(other)
         return this
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is CommandGroupBuilder) return false
+
+        if (coroutineScope != other.coroutineScope) return false
+
+        return commands == other.commands
+    }
+
+    override fun hashCode(): Int {
+        var result = coroutineScope.hashCode()
+        result = 31 * result + commands.hashCode()
+        return result
+    }
+
+    override fun toString(): String = "CommandGroupBuilder(coroutineScope=$coroutineScope, commands=$commands)"
 
     public fun build(): CommandGroup = CommandGroup(
         commands = commands,

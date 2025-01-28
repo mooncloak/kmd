@@ -60,6 +60,30 @@ public class Command internal constructor(
     override fun flow(): Flow<CommandResult> = flow {
         emit(execute())
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Command) return false
+
+        if (command != other.command) return false
+        if (arguments != other.arguments) return false
+        if (standardOutHandlers != other.standardOutHandlers) return false
+        if (standardErrorHandlers != other.standardErrorHandlers) return false
+
+        return coroutineScope == other.coroutineScope
+    }
+
+    override fun hashCode(): Int {
+        var result = command.hashCode()
+        result = 31 * result + arguments.hashCode()
+        result = 31 * result + standardOutHandlers.hashCode()
+        result = 31 * result + standardErrorHandlers.hashCode()
+        result = 31 * result + coroutineScope.hashCode()
+        return result
+    }
+
+    override fun toString(): String =
+        "Command(command=$command, arguments=$arguments, standardOutHandlers=$standardOutHandlers, standardErrorHandlers=$standardErrorHandlers, coroutineScope=$coroutineScope)"
 }
 
 /**
@@ -118,6 +142,30 @@ public class CommandBuilder internal constructor(
             ),
             coroutineScope = coroutineScope
         )
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is CommandBuilder) return false
+
+        if (command != other.command) return false
+        if (arguments != other.arguments) return false
+        if (coroutineScope != other.coroutineScope) return false
+        if (mutableStandardOutHandlers != other.mutableStandardOutHandlers) return false
+
+        return mutableStandardErrorHandlers == other.mutableStandardErrorHandlers
+    }
+
+    override fun hashCode(): Int {
+        var result = command.hashCode()
+        result = 31 * result + arguments.hashCode()
+        result = 31 * result + coroutineScope.hashCode()
+        result = 31 * result + mutableStandardOutHandlers.hashCode()
+        result = 31 * result + mutableStandardErrorHandlers.hashCode()
+        return result
+    }
+
+    override fun toString(): String =
+        "CommandBuilder(command=$command, arguments=$arguments, coroutineScope=$coroutineScope, mutableStandardOutHandlers=$mutableStandardOutHandlers, mutableStandardErrorHandlers=$mutableStandardErrorHandlers)"
 
     public fun build(): Command = Command(
         command = command,
