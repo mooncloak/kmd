@@ -69,4 +69,6 @@ public sealed interface Event {
     public data class Result public constructor(
         public val result: CommandResult
     ) : Event
+
+    public companion object
 }

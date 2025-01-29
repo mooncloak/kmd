@@ -3,6 +3,7 @@ package com.mooncloak.kodetools.kmd
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 @OptIn(ExperimentalKmdApi::class)
 class CommandLineValuesTest {
@@ -21,31 +22,31 @@ class CommandLineValuesTest {
 
     @Test
     fun `commandToValues handles single word command`() = runTest {
-        val result = "command".commandToValues()
+        val result = "command".commandToValues(splitOnWhitespace = true)
         assertEquals(listOf("command"), result)
     }
 
     @Test
     fun `commandToValues handles space-separated command`() = runTest {
-        val result = "command arg1 arg2".commandToValues()
+        val result = "command arg1 arg2".commandToValues(splitOnWhitespace = true)
         assertEquals(listOf("command", "arg1", "arg2"), result)
     }
 
     @Test
     fun `commandToValues handles empty string`() = runTest {
-        val result = "".commandToValues()
-        assertEquals(emptyList(), result)
+        val result = "".commandToValues(splitOnWhitespace = true)
+        assertTrue { result.isEmpty() }
     }
 
     @Test
     fun `commandToValues handles multiple spaces`() = runTest {
-        val result = "command   arg1    arg2".commandToValues()
+        val result = "command   arg1    arg2".commandToValues(splitOnWhitespace = true)
         assertEquals(listOf("command", "arg1", "arg2"), result)
     }
 
     @Test
     fun `commandToValues trims leading and trailing spaces`() = runTest {
-        val result = "   command arg1 arg2   ".commandToValues()
+        val result = "   command arg1 arg2   ".commandToValues(splitOnWhitespace = true)
         assertEquals(listOf("command", "arg1", "arg2"), result)
     }
 }
