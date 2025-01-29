@@ -23,6 +23,7 @@ public final class com/mooncloak/kodetools/kmd/Command : com/mooncloak/kodetools
 	public final fun then (Lcom/mooncloak/kodetools/kmd/CommandBuilder;)Lcom/mooncloak/kodetools/kmd/CommandGroupBuilder;
 	public final fun then (Lcom/mooncloak/kodetools/kmd/CommandGroup;)Lcom/mooncloak/kodetools/kmd/CommandGroupBuilder;
 	public final fun then (Lcom/mooncloak/kodetools/kmd/CommandGroupBuilder;)Lcom/mooncloak/kodetools/kmd/CommandGroupBuilder;
+	public final fun toBuilder ()Lcom/mooncloak/kodetools/kmd/CommandBuilder;
 	public fun toString ()Ljava/lang/String;
 }
 
@@ -107,6 +108,7 @@ public final class com/mooncloak/kodetools/kmd/CommandResult {
 }
 
 public abstract interface class com/mooncloak/kodetools/kmd/Event {
+	public static final field Companion Lcom/mooncloak/kodetools/kmd/Event$Companion;
 }
 
 public final class com/mooncloak/kodetools/kmd/Event$Command : com/mooncloak/kodetools/kmd/Event {
@@ -118,6 +120,9 @@ public final class com/mooncloak/kodetools/kmd/Event$Command : com/mooncloak/kod
 	public final fun getCommand ()Lcom/mooncloak/kodetools/kmd/Command;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/mooncloak/kodetools/kmd/Event$Companion {
 }
 
 public final class com/mooncloak/kodetools/kmd/Event$Input : com/mooncloak/kodetools/kmd/Event {

@@ -132,6 +132,23 @@ public class Command internal constructor(
             ) + groupBuilder.build().commands,
             coroutineScope = coroutineScope
         )
+
+    /**
+     * Converts this [Command] instance into a [CommandBuilder].
+     *
+     * This method creates a new [CommandBuilder] object by copying the properties of the
+     * current [Command] instance, allowing modifications and reconfiguration of the command.
+     *
+     * @return A new [CommandBuilder] instance initialized with the properties of the current [Command].
+     */
+    public fun toBuilder(): CommandBuilder =
+        CommandBuilder(
+            command = command,
+            arguments = arguments,
+            coroutineScope = coroutineScope,
+            breakCommandOnWhitespace = breakCommandOnWhitespace,
+            breakArgumentsOnWhitespace = breakArgumentsOnWhitespace
+        )
 }
 
 /**
