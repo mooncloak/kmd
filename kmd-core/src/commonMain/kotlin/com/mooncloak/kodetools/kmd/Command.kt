@@ -185,9 +185,9 @@ internal expect suspend fun Command.execute(): CommandResult
 public class CommandBuilder internal constructor(
     private val command: Any,
     private val arguments: List<Any>,
-    private val coroutineScope: CoroutineScope,
-    private val breakCommandOnWhitespace: Boolean = false,
-    private val breakArgumentsOnWhitespace: Boolean = false
+    private var coroutineScope: CoroutineScope,
+    private var breakCommandOnWhitespace: Boolean = false,
+    private var breakArgumentsOnWhitespace: Boolean = false
 ) {
 
     private val mutableStandardOutHandlers = mutableListOf<ProcessOutputHandler>()
@@ -228,10 +228,39 @@ public class CommandBuilder internal constructor(
         return this
     }
 
+    public fun onStandardOut(
+        handlers: Collection<ProcessOutputHandler>
+    ): CommandBuilder {
+        mutableStandardOutHandlers.addAll(handlers)
+        return this
+    }
+
     public fun onStandardError(
         handler: ProcessOutputHandler
     ): CommandBuilder {
         mutableStandardErrorHandlers.add(handler)
+        return this
+    }
+
+    public fun onStandardError(
+        handlers: Collection<ProcessOutputHandler>
+    ): CommandBuilder {
+        mutableStandardErrorHandlers.addAll(handlers)
+        return this
+    }
+
+    public fun breakCommandOnWhitespace(value: Boolean): CommandBuilder {
+        this.breakCommandOnWhitespace = value
+        return this
+    }
+
+    public fun breakArgumentsOnWhitespace(value: Boolean): CommandBuilder {
+        this.breakArgumentsOnWhitespace = value
+        return this
+    }
+
+    public fun withCoroutineScope(coroutineScope: CoroutineScope): CommandBuilder {
+        this.coroutineScope = coroutineScope
         return this
     }
 

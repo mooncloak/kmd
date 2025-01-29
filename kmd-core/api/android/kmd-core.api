@@ -28,16 +28,21 @@ public final class com/mooncloak/kodetools/kmd/Command : com/mooncloak/kodetools
 }
 
 public final class com/mooncloak/kodetools/kmd/CommandBuilder {
+	public final fun breakArgumentsOnWhitespace (Z)Lcom/mooncloak/kodetools/kmd/CommandBuilder;
+	public final fun breakCommandOnWhitespace (Z)Lcom/mooncloak/kodetools/kmd/CommandBuilder;
 	public final fun build ()Lcom/mooncloak/kodetools/kmd/Command;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun hashCode ()I
 	public final fun onStandardError (Lcom/mooncloak/kodetools/kmd/ProcessOutputHandler;)Lcom/mooncloak/kodetools/kmd/CommandBuilder;
+	public final fun onStandardError (Ljava/util/Collection;)Lcom/mooncloak/kodetools/kmd/CommandBuilder;
 	public final fun onStandardOut (Lcom/mooncloak/kodetools/kmd/ProcessOutputHandler;)Lcom/mooncloak/kodetools/kmd/CommandBuilder;
+	public final fun onStandardOut (Ljava/util/Collection;)Lcom/mooncloak/kodetools/kmd/CommandBuilder;
 	public final fun then (Lcom/mooncloak/kodetools/kmd/Command;)Lcom/mooncloak/kodetools/kmd/CommandGroupBuilder;
 	public final fun then (Lcom/mooncloak/kodetools/kmd/CommandBuilder;)Lcom/mooncloak/kodetools/kmd/CommandGroupBuilder;
 	public final fun then (Lcom/mooncloak/kodetools/kmd/CommandGroup;)Lcom/mooncloak/kodetools/kmd/CommandGroupBuilder;
 	public final fun then (Lcom/mooncloak/kodetools/kmd/CommandGroupBuilder;)Lcom/mooncloak/kodetools/kmd/CommandGroupBuilder;
 	public fun toString ()Ljava/lang/String;
+	public final fun withCoroutineScope (Lkotlinx/coroutines/CoroutineScope;)Lcom/mooncloak/kodetools/kmd/CommandBuilder;
 }
 
 public final class com/mooncloak/kodetools/kmd/CommandGroup : com/mooncloak/kodetools/kmd/AsyncExecutor, com/mooncloak/kodetools/kmd/FlowExecutor {
@@ -119,6 +124,16 @@ public final class com/mooncloak/kodetools/kmd/CommandRunner$Companion {
 
 public final class com/mooncloak/kodetools/kmd/CommandRunner$DefaultImpls {
 	public static fun run (Lcom/mooncloak/kodetools/kmd/CommandRunner;Ljava/lang/Object;[Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/mooncloak/kodetools/kmd/CommandRunnerKt {
+	public static final fun invoke (Lcom/mooncloak/kodetools/kmd/CommandRunner$Companion;Ljava/util/List;Ljava/util/List;ZZLkotlinx/coroutines/CoroutineScope;)Lcom/mooncloak/kodetools/kmd/DefaultCommandRunner;
+	public static synthetic fun invoke$default (Lcom/mooncloak/kodetools/kmd/CommandRunner$Companion;Ljava/util/List;Ljava/util/List;ZZLkotlinx/coroutines/CoroutineScope;ILjava/lang/Object;)Lcom/mooncloak/kodetools/kmd/DefaultCommandRunner;
+}
+
+public final class com/mooncloak/kodetools/kmd/DefaultCommandRunner : com/mooncloak/kodetools/kmd/CommandRunner {
+	public fun run (Lcom/mooncloak/kodetools/kmd/Command;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun run (Ljava/lang/Object;[Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public abstract interface class com/mooncloak/kodetools/kmd/Event {
