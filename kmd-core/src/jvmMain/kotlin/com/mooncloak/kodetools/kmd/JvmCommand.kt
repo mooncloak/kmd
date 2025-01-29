@@ -1,9 +1,7 @@
 package com.mooncloak.kodetools.kmd
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import java.io.InputStream
 
 @OptIn(ExperimentalKmdApi::class)
@@ -13,68 +11,61 @@ internal actual suspend fun Command.execute(): CommandResult =
             argument.commandToValues()
         }).toTypedArray()
 
-        var currentOutput = ProcessOutput()
-        var currentError = ProcessOutput()
-
         val process = ProcessBuilder(*commands)
             .redirectOutput(ProcessBuilder.Redirect.PIPE)
             .redirectError(ProcessBuilder.Redirect.PIPE)
             .start()
 
-        launch {
-            process.inputStream.subscribeOutput(
-                output = { currentOutput },
-                onOutputChanged = { updated ->
-                    currentOutput = updated
-
-                    standardOutHandlers.forEach { handler ->
-                        handler.handle(ProcessOutputScope, updated)
-                    }
+        val standardOutJob = process.inputStream.toFlow()
+            .onEach { output ->
+                standardOutHandlers.forEach { handler ->
+                    handler.handle(ProcessOutputScope, output)
                 }
-            )
-        }
+            }
+            .launchIn(this)
 
-        launch {
-            process.errorStream.subscribeOutput(
-                output = { currentError },
-                onOutputChanged = { updated ->
-                    currentError = updated
-
-                    standardErrorHandlers.forEach { handler ->
-                        handler.handle(ProcessOutputScope, updated)
-                    }
+        val standardErrorJob = process.errorStream.toFlow()
+            .onEach { output ->
+                standardErrorHandlers.forEach { handler ->
+                    handler.handle(ProcessOutputScope, output)
                 }
-            )
-        }
+            }
+            .launchIn(this)
 
         val exitCode = ExitCode(value = process.waitFor())
 
-        return@withContext CommandResult(
+        val result = CommandResult(
             command = command,
             arguments = arguments,
             exitCode = exitCode
         )
+
+        standardOutJob.join()
+        standardErrorJob.join()
+
+        return@withContext result
     }
 
-private suspend fun InputStream.subscribeOutput(
-    output: () -> ProcessOutput,
-    onOutputChanged: suspend (ProcessOutput) -> Unit
-) {
-    withContext(Dispatchers.IO) {
-        this@subscribeOutput.bufferedReader()
-            .useLines { lineSequence ->
-                val iterator = lineSequence.iterator()
+private fun InputStream.toFlow(): Flow<ProcessOutput> = flow {
+    val context = currentCoroutineContext()
 
-                while (this.isActive && iterator.hasNext()) {
-                    val line = iterator.next()
+    var current = ProcessOutput()
 
-                    onOutputChanged(
-                        ProcessOutput(
-                            totalLines = output().totalLines + line,
-                            diffLines = listOf(line)
-                        )
-                    )
-                }
+    this@toFlow.bufferedReader()
+        .useLines { lineSequence ->
+            val iterator = lineSequence.iterator()
+
+            while (context.isActive && iterator.hasNext()) {
+                val line = iterator.next()
+
+                val updated = ProcessOutput(
+                    totalLines = current.totalLines + line,
+                    diffLines = listOf(line)
+                )
+
+                current = updated
+
+                emit(updated)
             }
-    }
+        }
 }
