@@ -93,11 +93,13 @@ public operator fun CommandLineValues.plus(other: CommandLineValues): CommandLin
  * and splitting it on whitespace.
  */
 @ExperimentalKmdApi
-internal suspend fun Any.commandToValues(): List<String> =
+internal suspend fun Any.commandToValues(splitOnWhitespace: Boolean = false): List<String> =
     if (this is CommandLineValues) {
         this.get()
-    } else {
+    } else if (splitOnWhitespace) {
         this.toString().splitOnWhiteSpace()
+    } else {
+        listOf(this.toString())
     }
 
 @ExperimentalKmdApi

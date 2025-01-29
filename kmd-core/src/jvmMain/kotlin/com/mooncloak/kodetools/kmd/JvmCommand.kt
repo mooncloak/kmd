@@ -7,9 +7,10 @@ import java.io.InputStream
 @OptIn(ExperimentalKmdApi::class)
 internal actual suspend fun Command.execute(): CommandResult =
     withContext(Dispatchers.IO) {
-        val commands = (command.commandToValues() + arguments.flatMap { argument ->
-            argument.commandToValues()
-        }).toTypedArray()
+        val commands = (command.commandToValues(splitOnWhitespace = breakCommandOnWhitespace) +
+                arguments.flatMap { argument ->
+                    argument.commandToValues(splitOnWhitespace = breakArgumentsOnWhitespace)
+                }).toTypedArray()
 
         val process = ProcessBuilder(*commands)
             .redirectOutput(ProcessBuilder.Redirect.PIPE)

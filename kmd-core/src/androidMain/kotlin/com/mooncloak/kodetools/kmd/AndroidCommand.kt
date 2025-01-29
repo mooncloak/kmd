@@ -11,16 +11,10 @@ import java.io.InputStream
 @OptIn(ExperimentalKmdApi::class)
 internal actual suspend fun Command.execute(): CommandResult =
     withContext(Dispatchers.IO) {
-        val commands = (command.commandToValues() + arguments.flatMap { argument ->
-            argument.commandToValues()
-        }).toTypedArray()
-
-        var currentOutput = ProcessOutput(
-            type = ProcessOutputType.STDOUT
-        )
-        var currentError = ProcessOutput(
-            type = ProcessOutputType.STDERR
-        )
+        val commands = (command.commandToValues(splitOnWhitespace = breakCommandOnWhitespace) +
+                arguments.flatMap { argument ->
+                    argument.commandToValues(splitOnWhitespace = breakArgumentsOnWhitespace)
+                }).toTypedArray()
 
         var builder = ProcessBuilder(*commands)
 

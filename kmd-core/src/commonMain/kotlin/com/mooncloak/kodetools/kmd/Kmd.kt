@@ -23,6 +23,12 @@ import kotlinx.coroutines.coroutineScope
  * @param [onStandardError] A handler for processing standard error during command execution.
  * Defaults to an empty handler.
  *
+ * @property [breakCommandOnWhitespace] Whether the [command] should be split to separate arguments with whitespace as
+ * the delimiter. Defaults to `false`.
+ *
+ * @property [breakArgumentsOnWhitespace] Whether the [arguments] should be split to separate arguments with whitespace
+ * as the delimiter. Defaults to `false.
+ *
  * @return A Command configured with the provided values.
  */
 @ExperimentalKmdApi
@@ -31,11 +37,15 @@ public fun kmd(
     vararg arguments: Any,
     coroutineScope: CoroutineScope = MainScope(),
     onStandardOut: ProcessOutputHandler = ProcessOutputHandler {},
-    onStandardError: ProcessOutputHandler = ProcessOutputHandler {}
+    onStandardError: ProcessOutputHandler = ProcessOutputHandler {},
+    breakCommandOnWhitespace: Boolean = false,
+    breakArgumentsOnWhitespace: Boolean = false
 ): Command = CommandBuilder(
     command = command,
     arguments = arguments.toList(),
-    coroutineScope = coroutineScope
+    coroutineScope = coroutineScope,
+    breakCommandOnWhitespace = breakCommandOnWhitespace,
+    breakArgumentsOnWhitespace = breakArgumentsOnWhitespace
 ).onStandardOut(onStandardOut)
     .onStandardError(onStandardError)
     .build()
@@ -59,6 +69,12 @@ public fun kmd(
  * @param [onStandardError] A handler for processing standard error during command execution.
  * Defaults to an empty handler.
  *
+ * @property [breakCommandOnWhitespace] Whether the [command] should be split to separate arguments with whitespace as
+ * the delimiter. Defaults to `false`.
+ *
+ * @property [breakArgumentsOnWhitespace] Whether the [arguments] should be split to separate arguments with whitespace
+ * as the delimiter. Defaults to `false.
+ *
  * @return A CommandBuilder configured with the provided values.
  */
 @ExperimentalKmdApi
@@ -67,11 +83,15 @@ public fun kmdBuilder(
     vararg arguments: Any,
     coroutineScope: CoroutineScope = MainScope(),
     onStandardOut: ProcessOutputHandler = ProcessOutputHandler {},
-    onStandardError: ProcessOutputHandler = ProcessOutputHandler {}
+    onStandardError: ProcessOutputHandler = ProcessOutputHandler {},
+    breakCommandOnWhitespace: Boolean = false,
+    breakArgumentsOnWhitespace: Boolean = false
 ): CommandBuilder = CommandBuilder(
     command = command,
     arguments = arguments.toList(),
-    coroutineScope = coroutineScope
+    coroutineScope = coroutineScope,
+    breakCommandOnWhitespace = breakCommandOnWhitespace,
+    breakArgumentsOnWhitespace = breakArgumentsOnWhitespace
 ).onStandardOut(onStandardOut)
     .onStandardError(onStandardError)
 
@@ -93,6 +113,12 @@ public fun kmdBuilder(
  * @param [onStandardError] A handler for processing standard error during command execution.
  * Defaults to an empty handler.
  *
+ * @property [breakCommandOnWhitespace] Whether the [command] should be split to separate arguments with whitespace as
+ * the delimiter. Defaults to `false`.
+ *
+ * @property [breakArgumentsOnWhitespace] Whether the [arguments] should be split to separate arguments with whitespace
+ * as the delimiter. Defaults to `false.
+ *
  * @return A [CommandResult] representing the result of the command execution, including
  * the executed command, its arguments, and the exit code.
  */
@@ -101,13 +127,17 @@ public suspend fun execKmd(
     command: Any,
     vararg arguments: Any,
     onStandardOut: ProcessOutputHandler = ProcessOutputHandler {},
-    onStandardError: ProcessOutputHandler = ProcessOutputHandler {}
+    onStandardError: ProcessOutputHandler = ProcessOutputHandler {},
+    breakCommandOnWhitespace: Boolean = false,
+    breakArgumentsOnWhitespace: Boolean = false
 ): CommandResult = coroutineScope {
     kmd(
         command = command,
         arguments = arguments,
         coroutineScope = this@coroutineScope,
         onStandardOut = onStandardOut,
-        onStandardError = onStandardError
+        onStandardError = onStandardError,
+        breakCommandOnWhitespace = breakCommandOnWhitespace,
+        breakArgumentsOnWhitespace = breakArgumentsOnWhitespace
     ).await()
 }

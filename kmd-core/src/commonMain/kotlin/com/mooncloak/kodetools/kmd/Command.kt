@@ -40,6 +40,14 @@ public data class CommandResult public constructor(
  *
  * @property [standardErrorHandlers] A list of handlers responsible for processing standard error output.
  *
+ * @property [breakCommandOnWhitespace] Whether the [command] should be split to separate arguments with whitespace as
+ * the delimiter. Defaults to `false`.
+ *
+ * @property [breakArgumentsOnWhitespace] Whether the [arguments] should be split to separate arguments with whitespace
+ * as the delimiter. Defaults to `false.
+ *
+ * @property [coroutineScope] The [CoroutineScope] instance that will be used to launch deferred loading of results.
+ *
  * @constructor This class can only be constructed internally, ensuring controlled instantiation.
  */
 public class Command internal constructor(
@@ -47,6 +55,8 @@ public class Command internal constructor(
     public val arguments: List<Any>,
     public val standardOutHandlers: List<ProcessOutputHandler>,
     public val standardErrorHandlers: List<ProcessOutputHandler>,
+    public val breakCommandOnWhitespace: Boolean = false,
+    public val breakArgumentsOnWhitespace: Boolean = false,
     private val coroutineScope: CoroutineScope
 ) : AsyncExecutor<CommandResult>,
     FlowExecutor<CommandResult> {
@@ -69,6 +79,8 @@ public class Command internal constructor(
         if (arguments != other.arguments) return false
         if (standardOutHandlers != other.standardOutHandlers) return false
         if (standardErrorHandlers != other.standardErrorHandlers) return false
+        if (breakCommandOnWhitespace != other.breakCommandOnWhitespace) return false
+        if (breakArgumentsOnWhitespace != other.breakArgumentsOnWhitespace) return false
 
         return coroutineScope == other.coroutineScope
     }
@@ -79,11 +91,13 @@ public class Command internal constructor(
         result = 31 * result + standardOutHandlers.hashCode()
         result = 31 * result + standardErrorHandlers.hashCode()
         result = 31 * result + coroutineScope.hashCode()
+        result = 31 * result + breakCommandOnWhitespace.hashCode()
+        result = 31 * result + breakArgumentsOnWhitespace.hashCode()
         return result
     }
 
     override fun toString(): String =
-        "Command(command=$command, arguments=$arguments, standardOutHandlers=$standardOutHandlers, standardErrorHandlers=$standardErrorHandlers, coroutineScope=$coroutineScope)"
+        "Command(command=$command, arguments=$arguments, standardOutHandlers=$standardOutHandlers, standardErrorHandlers=$standardErrorHandlers, breakCommandOnWhitespace=$breakCommandOnWhitespace, breakArgumentsOnWhitespace=$breakArgumentsOnWhitespace, coroutineScope=$coroutineScope)"
 
     public fun then(builder: CommandBuilder): CommandGroupBuilder =
         CommandGroupBuilder(
@@ -144,11 +158,19 @@ internal expect suspend fun Command.execute(): CommandResult
  * @param [arguments] The array of command elements to be executed.
  *
  * @param [coroutineScope] The coroutine scope used for asynchronous execution.
+ *
+ * @property [breakCommandOnWhitespace] Whether the [command] should be split to separate arguments with whitespace as
+ * the delimiter. Defaults to `false`.
+ *
+ * @property [breakArgumentsOnWhitespace] Whether the [arguments] should be split to separate arguments with whitespace
+ * as the delimiter. Defaults to `false.
  */
 public class CommandBuilder internal constructor(
     private val command: Any,
     private val arguments: List<Any>,
-    private val coroutineScope: CoroutineScope
+    private val coroutineScope: CoroutineScope,
+    private val breakCommandOnWhitespace: Boolean = false,
+    private val breakArgumentsOnWhitespace: Boolean = false
 ) {
 
     private val mutableStandardOutHandlers = mutableListOf<ProcessOutputHandler>()
@@ -162,6 +184,8 @@ public class CommandBuilder internal constructor(
         if (arguments != other.arguments) return false
         if (coroutineScope != other.coroutineScope) return false
         if (mutableStandardOutHandlers != other.mutableStandardOutHandlers) return false
+        if (breakCommandOnWhitespace != other.breakCommandOnWhitespace) return false
+        if (breakArgumentsOnWhitespace != other.breakArgumentsOnWhitespace) return false
 
         return mutableStandardErrorHandlers == other.mutableStandardErrorHandlers
     }
@@ -172,11 +196,13 @@ public class CommandBuilder internal constructor(
         result = 31 * result + coroutineScope.hashCode()
         result = 31 * result + mutableStandardOutHandlers.hashCode()
         result = 31 * result + mutableStandardErrorHandlers.hashCode()
+        result = 31 * result + breakCommandOnWhitespace.hashCode()
+        result = 31 * result + breakArgumentsOnWhitespace.hashCode()
         return result
     }
 
     override fun toString(): String =
-        "CommandBuilder(command=$command, arguments=$arguments, coroutineScope=$coroutineScope, mutableStandardOutHandlers=$mutableStandardOutHandlers, mutableStandardErrorHandlers=$mutableStandardErrorHandlers)"
+        "CommandBuilder(command=$command, arguments=$arguments, coroutineScope=$coroutineScope, breakCommandOnWhitespace=$breakCommandOnWhitespace, breakArgumentsOnWhitespace=$breakArgumentsOnWhitespace, mutableStandardOutHandlers=$mutableStandardOutHandlers, mutableStandardErrorHandlers=$mutableStandardErrorHandlers)"
 
     public fun onStandardOut(
         handler: ProcessOutputHandler
@@ -231,6 +257,8 @@ public class CommandBuilder internal constructor(
         arguments = arguments,
         standardOutHandlers = mutableStandardOutHandlers.toList(),
         standardErrorHandlers = mutableStandardErrorHandlers.toList(),
+        breakCommandOnWhitespace = breakCommandOnWhitespace,
+        breakArgumentsOnWhitespace = breakArgumentsOnWhitespace,
         coroutineScope = coroutineScope
     )
 }
