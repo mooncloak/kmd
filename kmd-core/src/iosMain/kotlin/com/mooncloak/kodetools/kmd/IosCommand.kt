@@ -20,7 +20,7 @@ internal actual suspend fun Command.execute(): CommandResult =
 
         val buffer = Buffer()
 
-        var currentOutput = ProcessOutput()
+        var currentOutput = ProcessOutput(type = ProcessOutputType.STDOUT)
 
         // TODO: Support stderr
 
@@ -89,11 +89,13 @@ private suspend fun Source.subscribeOutput(
         while (this.isActive && !source.exhausted() && line != null) {
             line = source.readLine()
 
+            val current = output()
+
             val diffLines = listOfNotNull(line)
 
             onOutputChanged(
-                ProcessOutput(
-                    totalLines = output().totalLines + diffLines,
+                current.copy(
+                    totalLines = current.totalLines + diffLines,
                     diffLines = diffLines
                 )
             )

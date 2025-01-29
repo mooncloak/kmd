@@ -20,8 +20,8 @@ internal actual suspend fun Command.execute(): CommandResult =
         val outputMutex = Mutex(locked = false)
         val errorMutex = Mutex(locked = false)
 
-        var currentOutput = ProcessOutput()
-        var currentError = ProcessOutput()
+        var currentOutput = ProcessOutput(type = ProcessOutputType.STDOUT)
+        var currentError = ProcessOutput(type = ProcessOutputType.STDERR)
 
         val code = executeNodeCommand(
             command = formattedCommand,

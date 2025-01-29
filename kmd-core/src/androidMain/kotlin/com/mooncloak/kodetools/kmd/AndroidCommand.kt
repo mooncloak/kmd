@@ -1,10 +1,11 @@
 package com.mooncloak.kodetools.kmd
 
 import android.os.Build
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import java.io.InputStream
 
 @OptIn(ExperimentalKmdApi::class)
@@ -14,8 +15,12 @@ internal actual suspend fun Command.execute(): CommandResult =
             argument.commandToValues()
         }).toTypedArray()
 
-        var currentOutput = ProcessOutput()
-        var currentError = ProcessOutput()
+        var currentOutput = ProcessOutput(
+            type = ProcessOutputType.STDOUT
+        )
+        var currentError = ProcessOutput(
+            type = ProcessOutputType.STDERR
+        )
 
         var builder = ProcessBuilder(*commands)
 
@@ -26,63 +31,62 @@ internal actual suspend fun Command.execute(): CommandResult =
 
         val process = builder.start()
 
+        var standardOutJob: Job? = null
+        var standardErrorJob: Job? = null
+
         // TODO: Handle output on Android before API 24?
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            launch {
-                process.inputStream.subscribeOutput(
-                    output = { currentOutput },
-                    onOutputChanged = { updated ->
-                        currentOutput = updated
-
-                        standardOutHandlers.forEach { handler ->
-                            handler.handle(ProcessOutputScope, updated)
-                        }
+            standardOutJob = process.inputStream.toFlow(type = ProcessOutputType.STDOUT)
+                .onEach { output ->
+                    standardOutHandlers.forEach { handler ->
+                        handler.handle(ProcessOutputScope, output)
                     }
-                )
-            }
+                }
+                .launchIn(this)
 
-            launch {
-                process.errorStream.subscribeOutput(
-                    output = { currentError },
-                    onOutputChanged = { updated ->
-                        currentError = updated
-
-                        standardErrorHandlers.forEach { handler ->
-                            handler.handle(ProcessOutputScope, updated)
-                        }
+            standardErrorJob = process.errorStream.toFlow(type = ProcessOutputType.STDERR)
+                .onEach { output ->
+                    standardErrorHandlers.forEach { handler ->
+                        handler.handle(ProcessOutputScope, output)
                     }
-                )
-            }
+                }
+                .launchIn(this)
         }
 
         val exitCode = ExitCode(value = process.waitFor())
 
-        return@withContext CommandResult(
+        val result = CommandResult(
             command = command,
             arguments = arguments,
             exitCode = exitCode
         )
+
+        standardOutJob?.join()
+        standardErrorJob?.join()
+
+        return@withContext result
     }
 
-private suspend fun InputStream.subscribeOutput(
-    output: () -> ProcessOutput,
-    onOutputChanged: suspend (ProcessOutput) -> Unit
-) {
-    withContext(Dispatchers.IO) {
-        this@subscribeOutput.bufferedReader()
-            .useLines { lineSequence ->
-                val iterator = lineSequence.iterator()
+private fun InputStream.toFlow(type: ProcessOutputType): Flow<ProcessOutput> = flow {
+    val context = currentCoroutineContext()
 
-                while (this.isActive && iterator.hasNext()) {
-                    val line = iterator.next()
+    var current = ProcessOutput(type = type)
 
-                    onOutputChanged(
-                        ProcessOutput(
-                            totalLines = output().totalLines + line,
-                            diffLines = listOf(line)
-                        )
-                    )
-                }
+    this@toFlow.bufferedReader()
+        .useLines { lineSequence ->
+            val iterator = lineSequence.iterator()
+
+            while (context.isActive && iterator.hasNext()) {
+                val line = iterator.next()
+
+                val updated = current.copy(
+                    totalLines = current.totalLines + line,
+                    diffLines = listOf(line)
+                )
+
+                current = updated
+
+                emit(updated)
             }
-    }
+        }
 }

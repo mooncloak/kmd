@@ -11,32 +11,10 @@ class ProcessOutputTest {
         val totalLines = listOf("Line1", "Line2", "Line3")
         val diffLines = listOf("Line2", "Line3")
 
-        val processOutput = ProcessOutput(totalLines, diffLines)
+        val processOutput = ProcessOutput(ProcessOutputType.STDOUT, totalLines, diffLines)
 
         assertEquals(totalLines, processOutput.totalLines)
         assertEquals(diffLines, processOutput.diffLines)
-    }
-
-    @Test
-    fun `verify ProcessOutput totalLines component function`() {
-        val totalLines = listOf("Line1", "Line2", "Line3")
-        val diffLines = listOf("Line2", "Line3")
-
-        val processOutput = ProcessOutput(totalLines, diffLines)
-        val (componentTotalLines, _) = processOutput
-
-        assertEquals(totalLines, componentTotalLines)
-    }
-
-    @Test
-    fun `verify ProcessOutput diffLines component function`() {
-        val totalLines = listOf("Line1", "Line2", "Line3")
-        val diffLines = listOf("Line2", "Line3")
-
-        val processOutput = ProcessOutput(totalLines, diffLines)
-        val (_, componentDiffLines) = processOutput
-
-        assertEquals(diffLines, componentDiffLines)
     }
 
     @Test
@@ -44,9 +22,9 @@ class ProcessOutputTest {
         val totalLines = listOf("Line1", "Line2", "Line3")
         val diffLines = listOf("Line2", "Line3")
 
-        val sameOne = ProcessOutput(totalLines, diffLines)
-        val sameTwo = ProcessOutput(totalLines, diffLines)
-        val diffOne = ProcessOutput(totalLines + "Line4", diffLines)
+        val sameOne = ProcessOutput(ProcessOutputType.STDOUT, totalLines, diffLines)
+        val sameTwo = ProcessOutput(ProcessOutputType.STDOUT, totalLines, diffLines)
+        val diffOne = ProcessOutput(ProcessOutputType.STDOUT, totalLines + "Line4", diffLines)
 
         assertEquals(sameOne, sameTwo)
         assertEquals(sameOne.hashCode(), sameTwo.hashCode())
@@ -63,7 +41,7 @@ class ProcessOutputTest {
         val totalLines = listOf("Line1", "Line2", "Line3")
         val diffLines = listOf("Line2", "Line3")
 
-        val original = ProcessOutput(totalLines, diffLines)
+        val original = ProcessOutput(ProcessOutputType.STDOUT, totalLines, diffLines)
         val copiedWithSameValues = original.copy()
         val copiedWithChangedDiffLines = original.copy(diffLines = listOf("NewLine1", "NewLine2"))
 

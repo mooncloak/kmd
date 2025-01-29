@@ -16,7 +16,7 @@ internal actual suspend fun Command.execute(): CommandResult =
             .redirectError(ProcessBuilder.Redirect.PIPE)
             .start()
 
-        val standardOutJob = process.inputStream.toFlow()
+        val standardOutJob = process.inputStream.toFlow(type = ProcessOutputType.STDOUT)
             .onEach { output ->
                 standardOutHandlers.forEach { handler ->
                     handler.handle(ProcessOutputScope, output)
@@ -24,7 +24,7 @@ internal actual suspend fun Command.execute(): CommandResult =
             }
             .launchIn(this)
 
-        val standardErrorJob = process.errorStream.toFlow()
+        val standardErrorJob = process.errorStream.toFlow(type = ProcessOutputType.STDERR)
             .onEach { output ->
                 standardErrorHandlers.forEach { handler ->
                     handler.handle(ProcessOutputScope, output)
@@ -46,10 +46,10 @@ internal actual suspend fun Command.execute(): CommandResult =
         return@withContext result
     }
 
-private fun InputStream.toFlow(): Flow<ProcessOutput> = flow {
+private fun InputStream.toFlow(type: ProcessOutputType): Flow<ProcessOutput> = flow {
     val context = currentCoroutineContext()
 
-    var current = ProcessOutput()
+    var current = ProcessOutput(type = type)
 
     this@toFlow.bufferedReader()
         .useLines { lineSequence ->
@@ -58,7 +58,7 @@ private fun InputStream.toFlow(): Flow<ProcessOutput> = flow {
             while (context.isActive && iterator.hasNext()) {
                 val line = iterator.next()
 
-                val updated = ProcessOutput(
+                val updated = current.copy(
                     totalLines = current.totalLines + line,
                     diffLines = listOf(line)
                 )
