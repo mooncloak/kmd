@@ -89,6 +89,19 @@ public class CommandGroup internal constructor(
             coroutineScope = coroutineScope
         )
 
+    /**
+     * Converts this [CommandGroup] instance into a mutable [CommandGroupBuilder].
+     *
+     * This method enables modification or extension of an existing [CommandGroup] by returning
+     * a [CommandGroupBuilder] pre-populated with the commands and coroutine scope from the current instance.
+     *
+     * @return A [CommandGroupBuilder] initialized with the current instance's commands and coroutine scope.
+     */
+    public fun toBuilder(): CommandGroupBuilder = CommandGroupBuilder(
+        commands = commands,
+        coroutineScope = coroutineScope
+    )
+
     private suspend fun executeAll(): CommandGroupResult {
         val executedCommands = commands.map { command ->
             command.await()
