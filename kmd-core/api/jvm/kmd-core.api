@@ -106,6 +106,53 @@ public final class com/mooncloak/kodetools/kmd/CommandResult {
 	public fun toString ()Ljava/lang/String;
 }
 
+public abstract interface class com/mooncloak/kodetools/kmd/Event {
+}
+
+public final class com/mooncloak/kodetools/kmd/Event$Command : com/mooncloak/kodetools/kmd/Event {
+	public fun <init> (Lcom/mooncloak/kodetools/kmd/Command;)V
+	public final fun component1 ()Lcom/mooncloak/kodetools/kmd/Command;
+	public final fun copy (Lcom/mooncloak/kodetools/kmd/Command;)Lcom/mooncloak/kodetools/kmd/Event$Command;
+	public static synthetic fun copy$default (Lcom/mooncloak/kodetools/kmd/Event$Command;Lcom/mooncloak/kodetools/kmd/Command;ILjava/lang/Object;)Lcom/mooncloak/kodetools/kmd/Event$Command;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCommand ()Lcom/mooncloak/kodetools/kmd/Command;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/mooncloak/kodetools/kmd/Event$Input : com/mooncloak/kodetools/kmd/Event {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/mooncloak/kodetools/kmd/Event$Input;
+	public static synthetic fun copy$default (Lcom/mooncloak/kodetools/kmd/Event$Input;Ljava/lang/String;ILjava/lang/Object;)Lcom/mooncloak/kodetools/kmd/Event$Input;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getInput ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/mooncloak/kodetools/kmd/Event$Output : com/mooncloak/kodetools/kmd/Event {
+	public fun <init> (Lcom/mooncloak/kodetools/kmd/ProcessOutput;)V
+	public final fun component1 ()Lcom/mooncloak/kodetools/kmd/ProcessOutput;
+	public final fun copy (Lcom/mooncloak/kodetools/kmd/ProcessOutput;)Lcom/mooncloak/kodetools/kmd/Event$Output;
+	public static synthetic fun copy$default (Lcom/mooncloak/kodetools/kmd/Event$Output;Lcom/mooncloak/kodetools/kmd/ProcessOutput;ILjava/lang/Object;)Lcom/mooncloak/kodetools/kmd/Event$Output;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getOutput ()Lcom/mooncloak/kodetools/kmd/ProcessOutput;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/mooncloak/kodetools/kmd/Event$Result : com/mooncloak/kodetools/kmd/Event {
+	public fun <init> (Lcom/mooncloak/kodetools/kmd/CommandResult;)V
+	public final fun component1 ()Lcom/mooncloak/kodetools/kmd/CommandResult;
+	public final fun copy (Lcom/mooncloak/kodetools/kmd/CommandResult;)Lcom/mooncloak/kodetools/kmd/Event$Result;
+	public static synthetic fun copy$default (Lcom/mooncloak/kodetools/kmd/Event$Result;Lcom/mooncloak/kodetools/kmd/CommandResult;ILjava/lang/Object;)Lcom/mooncloak/kodetools/kmd/Event$Result;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getResult ()Lcom/mooncloak/kodetools/kmd/CommandResult;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public abstract interface class com/mooncloak/kodetools/kmd/Executor {
 }
 
