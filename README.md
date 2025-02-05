@@ -26,7 +26,7 @@ Checkout the [releases page](https://github.com/mooncloak/kmd/releases) to get t
 
 ```kotlin
 repositories {
-    maven("https://repo.repsy.io/mvn/mooncloak/public")
+    mavenCentral()
 }
 ```
 

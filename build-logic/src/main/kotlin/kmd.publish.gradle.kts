@@ -9,15 +9,12 @@ group = rootProject.group
 afterEvaluate {
     publishing {
         repositories {
-            maven { // TODO: Update to use mavenCentral
-                url = uri("https://repo.repsy.io/mvn/mooncloak/public")
+            maven {
+                url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2")
 
                 credentials {
-                    username = (project.findProperty("mooncloakRepsyUsername")
-                        ?: System.getenv("mooncloakRepsyUsername")) as? String
-
-                    password = (project.findProperty("mooncloakRepsyPassword")
-                        ?: System.getenv("mooncloakRepsyPassword")) as? String
+                    username = project.buildVariables.mavenCentralUsername
+                    password = project.buildVariables.mavenCentralPassphrase
                 }
             }
         }
@@ -102,10 +99,13 @@ fun MavenPublication.mavenCentralPom() {
     }
 }
 
+// Signs the artifacts that are published.
+// NOTE: This is MANDATORY for publishing to Maven Central.
+// This requires values in your home gradle.properties file.
+// https://docs.gradle.org/current/userguide/signing_plugin.html
 signing {
-    setRequired {
-        findProperty("signing.keyId") != null
-    }
+    isRequired = true
+    useGpgCmd()
 
     publishing.publications.all {
         sign(this)
